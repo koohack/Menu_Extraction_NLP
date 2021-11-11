@@ -1,0 +1,12 @@
+nltk==3.6.3
+numpy==1.19
+jamo
+chars2vec
+pororo==0.4.2
+python-mecab-ko==1.0.12
+anytree==2.8.0
+keras
+tensorflow
+tweepy==3.7.0
+matplotlib
+pybind11
