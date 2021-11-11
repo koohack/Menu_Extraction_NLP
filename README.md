@@ -26,3 +26,27 @@ A두개B하나C두개
 ###### The string is a collection of tokens excluding the menu extracted from text.
 ###### The token is the change of the menu extracted from the existing tokenized part to replacer.
 ###### The replacer is to explain what the extracted menu refers to.
+
+## 3. Menu Extractor Class
+### Example of python code
+```python
+from MenuExtractor import MenuExtractor
+me = MenuExtractor()
+menu=["빅맥세트","맥플러리","슈니언 버거","치킨너겟", "후렌치후라이","콜라"]
+text="빈맥세트 하나 라지세트로, 콜라, 후렌치 후라이 라지로 두개씩, 그리고 맥플라리 초코맛 추가"
+result = me.extract(text,menu)
+print(result)
+```
+### Result
+```bash
+{'A': {'quantity': 1, 'options': '라지세트', 'menu_name': '빅맥세트'}, 'C': {'quantity': 2, 'menu_name': '후렌치후라이'}, 'B': {'quantity': 2, 'menu_name': '콜라'}, 'D': {'options': '초코맛', 'menu_name': '맥플러리'}}
+```
+
+## 4. Installing Requirements
+#### install the requirements.txt 
+pip install -r requirements may not work. In the case, install line by line
+
+#### In case of tensorflow error
+```bash
+pip install --upgrade tensorflow
+```
