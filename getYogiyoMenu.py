@@ -3,8 +3,9 @@ import selenium
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-
-url="https://www.yogiyo.co.kr/mobile/#/348589/"
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import menu_ex
 
 class getYogiyo():
     def __init__(self):
@@ -22,11 +23,12 @@ class getYogiyo():
         self.driver.get(url)
 
         ### get total menu title
-        menuTitles = self.driver.find_elements(By.CLASS_NAME, "panel.panel-default.ng-scope")
-        time.sleep(1.5)
+        wait = WebDriverWait(self.driver, 5)
+        menuTitles=wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "panel.panel-default.ng-scope")))
 
         ### Click all of the menu title to get menus
         length = len(menuTitles)
+        print(length)
         subXPathFront = "/html/body/div[6]/div[2]/div[1]/div[4]/div/div["
         subXPathBack = "]/div[1]/h4/a/span"
         out = []
@@ -39,9 +41,11 @@ class getYogiyo():
                 title = self.driver.find_element(By.XPATH, fullXPath)
                 out.append(title)
                 title.click()
+            if i==length-1:
+                break
 
         ### get menu from web page
-        out = []
+        out1 = []
         menus = []
         for item in menuTitles:
             menuName = item.find_elements(By.CLASS_NAME, "menu-text")
@@ -52,15 +56,17 @@ class getYogiyo():
                     if not line:
                         continue
                     else:
-                        out.append(i)
+                        out1.append(i)
                         menus.append(line)
-        self.out=out
-        self.menus=menus
-        ### menus = list of menus, out = selenium module
-        time.sleep(0.2)
-        return menus, out
 
-    def clickMenu(self, menuList, numList, countList):
+        self.out=out1
+        self.menus=menus
+        time.sleep(0.2)
+
+        ### menus = list of menus, out = selenium module
+        return menus, out1
+
+    def clickMenu(self, numList, countList):
         ### click the menu
         for i, index in enumerate(numList):
             temp=self.out[index]
@@ -83,13 +89,35 @@ class getYogiyo():
         orderBtn=self.driver.find_element(By.CLASS_NAME, "btn.btn-lg.btn-ygy1.btn-block")
         orderBtn.click()
 
+    def findMenus(self, str):
+        string, token, replacer=menu_ex.ExtractMenu(str, self.menus)
+
+        out=[]
+        for r, menuName in replacer:
+            for i, name in enumerate(self.menus):
+                if name==menuName:
+                    out.append(i)
+                    break
+        return out
+
+    def closeDriver(self):
+        # print(self.driver.page_source)
+        self.driver.quit()
+        return self.driver.page_source
 
 if __name__=="__main__":
-    a=getYogiyo()
-    b, c=a.getInfo(url)
-    a.clickMenu([], [1,2], [1, 2])
+    url = "https://www.yogiyo.co.kr/mobile/?gclid=CjwKCAiA-9uNBhBTEiwAN3IlNGGAGpgyNKd2BlArX4uVTrCSoKJ47RQoachcLeGUQ1oN-0RGQwNbHBoC0lgQAvD_BwE#/4412/"
+    yogiyo=getYogiyo()
+    menus, menusBlock=yogiyo.getInfo(url)
 
-    print(b)
+    str="로스까스정식 하나 새우볶음밥 두개 "
+    position=yogiyo.findMenus(str)
+    print(position)
+
+    yogiyo.clickMenu(position, [1,1])
+    time.sleep(5)
+    yogiyo.closeDriver()
+
 
 
 

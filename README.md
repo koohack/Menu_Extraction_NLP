@@ -1,7 +1,7 @@
 # Menu_Extraction_NLP
 ## 1. Requirements
 ![Generic badge](http://img.shields.io/badge/python-3.8x-yellow.svg) ![Generic badge](http://img.shields.io/badge/konlpy-0.5.2-green.svg) ![Generic badge](http://img.shields.io/badge/nltk-3.6.3-yellowgreen.svg) ![Generic badge](http://img.shields.io/badge/numpy-1.19.x-brightgreen.svg) ![Generic badge](http://img.shields.io/badge/python-3.8x-yellow.svg) 
-![Generic badge](http://img.shields.io/badge/jamo-0.4.1-green.svg) ![Generic badge](http://img.shields.io/badge/scikit_learn-1.0-yellowgreen.svg) ![Generic badge](http://img.shields.io/badge/char2vec-0.1.7-brightgreen.svg)
+![Generic badge](http://img.shields.io/badge/jamo-0.4.1-green.svg) ![Generic badge](http://img.shields.io/badge/scikit_learn-1.0-yellowgreen.svg) ![Generic badge](http://img.shields.io/badge/char2vec-0.1.7-brightgreen.svg) ![Generic badge](http://img.shields.io/badge/selenium-4.0.0-yellow.svg)
 ---
 ## 2. How to use
 ### Example of python code
@@ -19,9 +19,9 @@ print(replacer)
 ```
 ### Result
 ```bash
-A두개B하나C두개
-[('A', 'replacer'), ('두', 'Determiner'), ('개', 'Noun'), ('B', 'replacer'), ('하나', 'Noun'), ('C', 'replacer'), ('두', 'Determiner'), ('개', 'Noun')]
-[('A', '치킨너겟'), ('B', '슈니언 버거'), ('C', '빅맥')]
+A하나B두개C하나
+[('A', 'replacer'), ('하나', 'Noun'), ('B', 'replacer'), ('두', 'Determiner'), ('개', 'Noun'), ('C', 'replacer'), ('하나', 'Noun')]
+[('A', '빅맥세트'), ('B', '콜라'), ('C', '후렌치후라이')]
 ```
 ###### The string is a collection of tokens excluding the menu extracted from text.
 ###### The token is the change of the menu extracted from the existing tokenized part to replacer.
@@ -41,8 +41,26 @@ print(result)
 ```bash
 {'A': {'quantity': 1, 'options': '라지세트', 'menu_name': '빅맥세트'}, 'C': {'quantity': 2, 'menu_name': '후렌치후라이'}, 'B': {'quantity': 2, 'menu_name': '콜라'}, 'D': {'options': '초코맛', 'menu_name': '맥플러리'}}
 ```
+## 4. getYogiyo Class
+### Example of python code
+###### !! before run this code, you need "menu_ex" code !!
+###### +You must use chormedriver that fit your chrome browser
+```python
+import getYogiyoMenu
+import time
 
-## 4. Installing Requirements
+url="url of yogiyo, extract menus in this page"
+yogiyo=getYogiyoMenu.getYogiyo()
+menus, menusBlock=yogiyo.getInfo(url)
+
+str="로스까스정식 하나 새우볶음밥 두개"
+position=yogiyo.findMenus(str)
+
+yogiyo.clickMenu(position, [1,2])
+time.sleep(3)
+yogiyo.closeDriver() ### must enter this code
+```
+## 5. Installing Requirements
 #### install the requirements.txt 
 pip install -r requirements may not work. In the case, install line by line
 
