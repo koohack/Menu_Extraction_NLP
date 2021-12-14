@@ -100,24 +100,41 @@ class getYogiyo():
                     break
         return out
 
+    def getFinalResult(self):
+        wait = WebDriverWait(self.driver, 5)
+        finalMenus = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "list-group-item ng-scope")))
+
+        out=[]
+        for item in finalMenus:
+            menuName=item.find_element(By.CLASS_NAME, "ng-blinding").text
+            menuCost=item.find_element(By.CLASS_NAME,"order-price ng-binding").text
+            out.append((menuName, menuCost))
+
+        return out
+
     def closeDriver(self):
-        # print(self.driver.page_source)
+        #print(self.driver.page_source)
+        a=self.driver.page_source
         self.driver.quit()
-        return self.driver.page_source
+        return a
 
 if __name__=="__main__":
-    url = "https://www.yogiyo.co.kr/mobile/?gclid=CjwKCAiA-9uNBhBTEiwAN3IlNGGAGpgyNKd2BlArX4uVTrCSoKJ47RQoachcLeGUQ1oN-0RGQwNbHBoC0lgQAvD_BwE#/4412/"
+    url = "https://www.yogiyo.co.kr/mobile/?gclid=CjwKCAiA-9uNBhBTEiwAN3IlNGGAGpgyNKd2BlArX4uVTrCSoKJ47RQoachcLeGUQ1oN-0RGQwNbHBoC0lgQAvD_BwE#/341607/"
     yogiyo=getYogiyo()
     menus, menusBlock=yogiyo.getInfo(url)
 
-    str="로스까스정식 하나 새우볶음밥 두개 "
+    str="돈부리 하나 카츠돈 두개 "
     position=yogiyo.findMenus(str)
     print(position)
 
     yogiyo.clickMenu(position, [1,1])
-    time.sleep(5)
-    yogiyo.closeDriver()
+    time.sleep(1)
+    a=yogiyo.closeDriver()
 
+    f=open("t.html", "a", encoding="utf-8")
+    t=a.split("\n")
+    for item in t:
+        f.write(item)
 
 
 
